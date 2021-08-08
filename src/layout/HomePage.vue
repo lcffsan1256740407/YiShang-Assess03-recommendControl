@@ -6,7 +6,6 @@
       <el-main>
         <BasicHeader/>
           <router-view></router-view>
-        <BasicFooter/>
       </el-main>
 
   </el-container>
@@ -22,7 +21,7 @@ export default {
   components: { BasicMenu , BasicHeader , BasicFooter },
   mounted(){
     this.$router.replace({
-      name:'list'
+      name:'showlist'
     })
   }
 };

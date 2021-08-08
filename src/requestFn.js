@@ -3,78 +3,121 @@ import { Service } from "./service";
 
 // 1.封装登录请求
 
-let loginRequest = (account,password) => {
-    return Service({
-      url: 'login',
-      params: {
-        username:account,
-        password:password
-      }
-    })
-  }
+let loginRequest = (account, password) => {
+  return Service({
+    url: '/user/login',
+    data: {
+      username: account,
+      password: password
+    }
+  })
+}
 
 // ===============================================
 
-// 2.封装获取用户列表请求
+// 2.封装获取建议书列表请求
 
-let userListRequest = (pagenum,pagesize) => {
+let bookListRequest = (pageNum, insuranceName) => {
 
   return Service({
-    url: "users",
+    url: "/proposal/listProposal",
+    data: {
+      pageNum: pageNum,
+      insuranceName: insuranceName,
+      pageSize: 5,
+    },
+  });
+}
+
+// ===============================================
+
+// 3.获取保险种类请求
+
+let typeRequest = () => {
+  return Service({
+    url: `/insurance/listInsurance`,
+    method: "get"
+  });
+}
+
+// ===============================================
+
+// 4.根据保险种类ID查询保额保费
+
+let moneyRequest = (insuranceId) => {
+  return Service({
+    url: "/coveragePremium/listCoveragePremium",
     method: "get",
     params: {
-      pagenum: pagenum,
-      pagesize: pagesize,
-    },
-  });
+      insuranceId: insuranceId
+    }
+  })
 }
 
-// ==============================================
+// ===============================================
 
-// 3.封装删除用户请求
+// 5.保存建议书
 
-let deleteRequest = (id) => {
+let saveRequest = (insuranceId, insuranceName, coverage, premium) => {
   return Service({
-    url: `users/${id}`,
-    method:"delete"
-  });
-}
-
-// =============================================
-
-// 4.封装添加用户请求
-
-let addRequest = (ruleForm1) => {
-  return Service({
-    url: "users",
-    data: ruleForm1
-  });
-}
-
-// ==============================================
-
-// 5.封装编辑用户请求
-
-let editRequest = (msg,msg1,msg2) => {
-  return Service({
-    url: `users/${msg}`,
-    method: "put",
+    url: "/proposal/saveProposal",
     data: {
-      mobile: msg1,
-      email: msg2
-    },
-  });
+      insuranceId,
+      insuranceName,
+      coverage,
+      premium
+    }
+  })
 }
 
-// ==============================================
+// ===============================================
 
-// 6.封装根据id查询用户信息请求
+// 6.完善投被保人信息
 
-let lookRequest = (msg) => {
+let comRequest = (proposal, proposalInsureds) => {
   return Service({
-    url: `users/${msg}`,
-    method: "get",
-  });
+    url: '/proposal/saveProposalDetail',
+    data: {
+      proposal,
+      proposalInsureds
+    }
+  })
 }
 
-export {loginRequest,userListRequest,deleteRequest,addRequest,editRequest,lookRequest}
+// ===============================================
+
+// 7.删除建议书
+
+let deleteRequest = (proposalId) => {
+  return Service({
+    url: `/proposal/delProposal?proposalId=${proposalId}`,
+    method: "get"
+  })
+}
+
+// ===============================================
+
+// 8.根据建议书id获取建议书详情
+
+let detailRequest = (proposalId) => {
+   return Service({
+     url:`/proposal/getProposalById?proposalId=${proposalId}`,
+     method:"get"
+   })
+}
+
+// ===============================================
+
+// 9.修改建议书信息接口
+
+let saveAllRequest = (proposal, proposalInsureds) => {
+  return Service({
+    url:"/proposal/updateProposal",
+    data:{
+      proposal,
+      proposalInsureds
+    }
+  })
+}
+
+export { loginRequest, bookListRequest, typeRequest, moneyRequest, saveRequest, comRequest, deleteRequest ,detailRequest,saveAllRequest}

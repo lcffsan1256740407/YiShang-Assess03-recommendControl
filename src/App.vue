@@ -7,14 +7,14 @@ export default {
   name: "App",
   mounted() {
     // 直接飞到登录页面
-    // this.$router.replace({
-    //   name:'login'
-    // })
+    this.$router.replace({
+      name:'login'
+    })
 
     // 直接飞到主页
-    this.$router.replace({
-      name: "list",
-    });
+    // this.$router.replace({
+    //   name: "list",
+    // });
   },
 };
 </script>
@@ -26,5 +26,6 @@ export default {
 }
 body{
   overflow-x: hidden;
+  background-color: rgb(250,250,250);
 }
 </style>

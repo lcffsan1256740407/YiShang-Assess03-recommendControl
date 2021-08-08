@@ -34,6 +34,7 @@
               <el-input
                 v-model="ruleForm.PassWord"
                 placeholder="请输入密码"
+                show-password
               ></el-input>
             </el-form-item>
             <el-form-item>
@@ -55,6 +56,8 @@
 </template>
 
 <script>
+import { loginRequest } from "../requestFn";
+
 export default {
   name: "LoginPage",
   data() {
@@ -78,24 +81,42 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-            // 跳出弹框并路由至 HomePage 页面
-            this.open1()
-            this.$router.replace({
-                name:'home'
-            })
+          loginRequest(this.ruleForm.UserName, this.ruleForm.PassWord).then(
+            (res) => {
+              console.log(res);
+              if (res.code != -1) {
+                //存储token
+                localStorage.setItem("token",res.content.token)
+                //存储用户名
+                localStorage.setItem("username",this.ruleForm.UserName)
+                //跳出弹框并路由至 HomePage 页面
+                this.open1();
+                this.$router.replace({
+                  name: "home",
+                });
+              } else {
+                //提示错误信息
+                this.$notify({
+                  title: "登录",
+                  message: "账号或者密码错误!",
+                  type: "error",
+                });
+              }
+            }
+          );
         }
       });
     },
     // 定义一个弹窗
     open1() {
-        this.$notify({
-          title: '登录',
-          message: '用户登录成功!',
-          type: 'success'
-        });
+      this.$notify({
+        title: "登录",
+        message: "用户登录成功!",
+        type: "success",
+      });
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>

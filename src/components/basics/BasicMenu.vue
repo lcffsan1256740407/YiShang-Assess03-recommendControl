@@ -22,7 +22,7 @@
 
       <el-menu-item-group>
         <el-menu-item index="1-1" @click="goToShowListPage">保险列表</el-menu-item>
-        <el-menu-item index="1-2">其他</el-menu-item>
+        <el-menu-item index="1-2" @click="goToOther">其他</el-menu-item>
       </el-menu-item-group>
     </el-submenu>
 
@@ -36,6 +36,11 @@ export default {
     goToShowListPage(){
       this.$router.replace({
         name:'list'
+      })
+    },
+    goToOther(){
+      this.$router.replace({
+        name:'other'
       })
     }
   }

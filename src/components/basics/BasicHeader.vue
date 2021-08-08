@@ -7,7 +7,7 @@
         <el-col :span="12">
           <el-dropdown trigger="click">
             <span class="el-dropdown-link">
-              欢迎用户: 233
+              欢迎用户: {{ username }}
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item icon="el-icon-user">个人中心</el-dropdown-item>
@@ -29,6 +29,11 @@
 <script>
 export default {
   name: "BasicHeader",
+  data() {
+    return {
+      username:''
+    }
+  },
   methods: {
     out() {
       this.$router.replace({
@@ -38,6 +43,9 @@ export default {
       localStorage.clear();
     },
   },
+  mounted(){
+    this.username = localStorage.getItem("username")
+  }
 };
 </script>
 
@@ -50,7 +58,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  border-bottom: 1px solid rgba(12, 12, 12 , 0.3);
+  border-bottom: 1px solid rgb(231, 229, 229);
 }
 .header-top .header-top-content {
   cursor: pointer;
