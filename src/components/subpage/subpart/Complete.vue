@@ -62,7 +62,7 @@
                 <el-radio-button label="0">女</el-radio-button>
               </el-radio-group>
             </span>
-            <span v-show="!item.isEdit">性别:{{ item.sex }}</span>
+            <span v-show="!item.isEdit">性别:{{ item.insuredMale == 1 ? "男" : "女" }}</span>
 
             <span v-show="item.isEdit"
               >身份证:

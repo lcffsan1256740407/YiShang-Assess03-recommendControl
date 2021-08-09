@@ -4,16 +4,16 @@
       <span>详情页面</span>
     </div>
     <div>
-        <el-form
-          :model="proposal"
-          :rules="rules"
-          ref="ruleForm"
-          label-width="100px"
-          class="demo-ruleForm"
-        >
-      <!-- 保险类型信息 -->
-      <div style="border-bottom: 1px solid silver">
-        <h3>保险类型信息</h3>
+      <el-form
+        :model="proposal"
+        :rules="rules"
+        ref="ruleForm"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
+        <!-- 保险类型信息 -->
+        <div style="border-bottom: 1px solid silver">
+          <h3>保险类型信息</h3>
           <!-- 保险种类 -->
           <el-form-item label="保险名称" prop="moeny">
             <el-input
@@ -46,12 +46,11 @@
               :value="`${arry[0].premium} 元`"
             ></el-input>
           </el-form-item>
-      
-      </div>
+        </div>
 
-      <!-- 投保人信息 -->
-      <div style="border-bottom: 1px solid silver">
-        <h3>投保人信息</h3>
+        <!-- 投保人信息 -->
+        <div style="border-bottom: 1px solid silver">
+          <h3>投保人信息</h3>
 
           <el-form-item label="姓名" prop="applicantName">
             <el-input v-model="proposal.applicantName"></el-input>
@@ -70,60 +69,69 @@
           <el-form-item label="身份证号" prop="applicantIdNo">
             <el-input v-model="proposal.applicantIdNo"></el-input>
           </el-form-item>
+        </div>
 
-      </div>
+        <!-- 被保人 -->
+        <h3>被保人</h3>
+        <ul style="border-bottom: 1px solid silver; padding-bottom: 20px">
+          <li v-for="(item, index) in proposalInsureds" :key="index">
+            <div>
+              <span v-if="item.isEdit"
+                >姓名:
+                <input type="text" v-model="item.insuredName" class="names"
+              /></span>
 
-      <!-- 被保人 -->
-      <h3>被保人</h3>
-      <ul style="border-bottom: 1px solid silver; padding-bottom: 20px">
-        <li v-for="(item, index) in proposalInsureds" :key="index">
-          <div>
-            <span v-if="item.isEdit"
-              >姓名:
-              <input type="text" v-model="item.insuredName" class="names"
-            /></span>
+              <span v-else>姓名: {{ item.insuredName }}</span>
 
-            <span v-else>姓名: {{ item.insuredName }}</span>
+              <span v-if="item.isEdit"
+                >性别:
+                <el-radio-group
+                  v-model="item.insuredMale"
+                  size="small"
+                  fill="#fd4c5d"
+                >
+                  <el-radio-button label="1">男</el-radio-button>
+                  <el-radio-button label="0">女</el-radio-button>
+                </el-radio-group>
+              </span>
 
-            <span v-if="item.isEdit"
-              >性别:
-              <el-radio-group
-                v-model="item.insuredMale"
-                size="small"
-                fill="#fd4c5d"
+              <span v-else
+                >性别: {{ item.insuredMale == 1 ? "男" : "女" }}</span
               >
-                <el-radio-button label="1">男</el-radio-button>
-                <el-radio-button label="0">女</el-radio-button>
-              </el-radio-group>
-            </span>
 
-            <span v-else>性别: {{ item.insuredMale == 1 ? "男" : "女" }}</span>
+              <span v-if="item.isEdit"
+                >身份证:
+                <input type="text" v-model="item.insuredIdNo" class="number"
+              /></span>
 
-            <span v-if="item.isEdit"
-              >身份证:
-              <input type="text" v-model="item.insuredIdNo" class="number"
-            /></span>
+              <span v-else>身份证: {{ item.insuredIdNo }}</span>
+            </div>
 
-            <span v-else>身份证: {{ item.insuredIdNo }}</span>
-          </div>
+            <!-- 编辑按钮 -->
+            <el-button
+              type="success"
+              size="mini"
+              @click="handleEdit(item, index)"
+              >编辑</el-button
+            >
+          </li>
+        </ul>
 
-          <!-- 编辑按钮 -->
-          <el-button type="success" size="mini" @click="handleEdit(item, index)"
-            >编辑</el-button
-          >
-        </li>
-      </ul>
-
-      <!-- 确认修改按钮 -->
-      <el-button type="primary" class="save" @click="save('ruleForm')">确认修改</el-button>
-
+        <!-- 确认修改按钮 -->
+        <el-button type="primary" class="save" @click="save('ruleForm')"
+          >确认修改</el-button
+        >
       </el-form>
     </div>
   </el-card>
 </template>
 
 <script>
-import { detailRequest, moneyRequest , saveAllRequest } from "../../../requestFn";
+import {
+  detailRequest,
+  moneyRequest,
+  saveAllRequest,
+} from "../../../requestFn";
 
 export default {
   name: "Edit",
@@ -188,8 +196,8 @@ export default {
         return item.coverage == this.proposal.coverage;
       });
       this.arry = arry;
-      this.proposal.coverage = this.arry[0].coverage
-      this.proposal.premium = this.arry[0].premium
+      this.proposal.coverage = this.arry[0].coverage;
+      this.proposal.premium = this.arry[0].premium;
     },
     //  被保人验证身份证号
     checkNumber(number, index, item) {
@@ -259,19 +267,20 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // 验证被保人数据
-          if(this.proposalInsureds.length == this.proposalInsureds.filter( item => {
-            return item.isEdit == false
-          }).length){
+          if (
+            this.proposalInsureds.length ==
+            this.proposalInsureds.filter((item) => {
+              return item.isEdit == false;
+            }).length
+          ) {
             // 发送修改建议书请求
-            saveAllRequest(this.proposal,this.proposalInsureds).then(
-              res => {
-                this.$router.replace({
-                  name:'list'
-                })
-              }
-            )
-          }else{
-            alert("请先确认被保人编辑状态")
+            saveAllRequest(this.proposal, this.proposalInsureds).then((res) => {
+              this.$router.replace({
+                name: "list",
+              });
+            });
+          } else {
+            alert("请先确认被保人编辑状态");
           }
         }
       });
@@ -327,5 +336,9 @@ h3 {
 .save {
   margin-top: 35px;
   margin-left: 550px;
+}
+.btns {
+  display: flex;
+  justify-content: end;
 }
 </style>
